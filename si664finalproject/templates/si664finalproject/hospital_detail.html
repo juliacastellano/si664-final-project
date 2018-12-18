@@ -1,0 +1,198 @@
+{% extends 'si664finalproject/base.html' %}
+
+	 {% load si664finalproject_extras %}
+
+	 <!-- safe filter on for raw HTML stored in database -->
+	 {% block content %}
+	 <header>
+		 <div class="row">
+		 <div class="col-sm-10">
+			 <h2>{{ hospital.hospital_name | safe }}</h2>
+		 </div>
+		 <div class="col-xs-1">
+			 {% if user.is_authenticated %}
+			 <a class="btn btn-outline-secondary" href="{% url 'hospital_update' hospital.pk %}">edit</a>
+			 {% endif %}
+		 </div>
+		 <div class="col-xs-1">
+			 {% if user.is_authenticated %}
+			 &nbsp;<a class="btn btn-outline-warning" href="{% url 'hospital_delete' hospital.pk %}">delete</a>
+			 {% endif %}
+		 </div>
+		 </div>
+	 </header>
+
+<!--
+
+	 {% if site.country_area.all %}
+		 <div class="row">
+		 <div class="col-sm-2">
+			 <p>Region</p>
+		 </div>
+		 <div class="col-sm-10">
+			 {% spaceless %}
+			 <p>
+			 {% for country_area in site.country_area.all %}
+				 {% if country_area.location.intermediate_region %}
+				 {% ifchanged country_area.location.intermediate_region.intermediate_region_id %}
+					 {% if forloop.first %}
+					 {{ country_area.location.intermediate_region.intermediate_region_name.strip }}
+					 {% else %}
+					 {{ country_area.location.intermediate_region.intermediate_region_name.strip|add_leading_comma }}
+					 {% endif %}
+				 {% endifchanged %}
+				 {% elif country_area.location.sub_region %}
+				 {% ifchanged country_area.location.sub_region.sub_region_id %}
+					 {% if forloop.first %}
+					 {{ country_area.location.sub_region.sub_region_name.strip }}
+					 {% else %}
+					 {{ country_area.location.sub_region.sub_region_name.strip|add_leading_comma }}
+					 {% endif %}
+				 {% endifchanged %}
+				 {% elif country_area.location.region %}
+				 {% ifchanged country_area.location.region.region_id %}
+					 {% if forloop.first %}
+					 {{ country_area.location.region.region_name.strip }}
+					 {% else %}
+					 {{ country_area.location.region.region_name.strip|add_leading_comma }}
+					 {% endif %}
+				 {% endifchanged %}
+				 {% else %}
+				 {% ifchanged country_area.location.planet_id %}
+					 {{ country_area.location.planet.unsd_name.strip }}
+				 {% endifchanged %}
+				 {% endif %}
+			 {% endfor %}
+			 </p>
+			 {% endspaceless %}
+		 </div>
+		 </div>
+
+		 <div class="row">
+		 <div class="col-sm-2">
+			 <p>Country / Area</p>
+		 </div>
+		 <div class="col-sm-10">
+			 {% spaceless %}
+			 <p>
+			 {% for country_area in site.country_area.all %}
+				 {% if forloop.last %}
+				 {{ country_area.country_area_name.strip }} ({{ country_area.iso_alpha3_code.strip }})
+				 {% else %}
+				 {{ country_area.country_area_name.strip }} {{ country_area.iso_alpha3_code.strip|add_parens|add_trailing_comma }}
+				 {% endif %}
+			 {% endfor %}
+			 </p>
+			 {% endspaceless %}
+		 </div>
+		 </div>
+
+	 {% endif %}
+	-->
+
+
+
+		 {% if hospital.provider_identifier %}
+			 <div class="row">
+			 <div class="col-sm-2">
+				 <p>Provider Identifier</p>
+			 </div>
+			 <div class="col-sm-10">
+				 <p>{{ hospital.provider_identifier }}</p>
+			 </div>
+			 </div>
+		 {% endif %}
+
+		 {% if hospital.phone_number %}
+			 <div class="row">
+			 <div class="col-sm-2">
+				 <p>Phone Number</p>
+			 </div>
+			 <div class="col-sm-10">
+				 <p>{{ hospital.phone_number }}</p>
+			 </div>
+			 </div>
+		 {% endif %}
+
+		 {% if hospital.address %}
+			 <div class="row">
+			 <div class="col-sm-2">
+				 <p>Address</p>
+			 </div>
+			 <div class="col-sm-10">
+				 <p>{{ hospital.address }}</p>
+			 </div>
+			 </div>
+		 {% endif %}
+
+		 {% if hospital.city.city %}
+			 <div class="row">
+			 <div class="col-sm-2">
+				 <p>City</p>
+			 </div>
+			 <div class="col-sm-10">
+				 <p>{{ hospital.city.city }}</p>
+			 </div>
+			 </div>
+		 {% endif %}
+
+
+		 {% if hospital.state.state %}
+			 <div class="row">
+			 <div class="col-sm-2">
+				 <p>State</p>
+			 </div>
+			 <div class="col-sm-10">
+				 <p>{{ hospital.state.state }}</p>
+			 </div>
+			 </div>
+		 {% endif %}
+
+		 {% if hospital.zip_code.zip_code %}
+			 <div class="row">
+			 <div class="col-sm-2">
+				 <p>Zip Code</p>
+			 </div>
+			 <div class="col-sm-10">
+				 <p>{{ hospital.zip_code.zip_code }}</p>
+			 </div>
+			 </div>
+		 {% endif %}
+
+		 {% if hospital.county.county %}
+			 <div class="row">
+			 <div class="col-sm-2">
+				 <p>County</p>
+			 </div>
+			 <div class="col-sm-10">
+				 <p>{{ hospital.county.county }}</p>
+			 </div>
+			 </div>
+		 {% endif %}
+
+
+		 {% if hospital.payment_category_names %}
+			 <div class="row">
+			 <div class="col-sm-2">
+				 <p>Payment</p>
+			 </div>
+			 <div class="col-sm-10">
+				 <p>{{ hospital.payment_category_names }}</p>
+			 </div>
+			 </div>
+		 {% endif %}
+
+
+		 {% if hospital.value_names %}
+			 <div class="row">
+			 <div class="col-sm-2">
+				 <p>Value of Care </p>
+			 </div>
+			 <div class="col-sm-10">
+				 {{ hospital.value_names }}
+			 </div>
+			 </div>
+		 {% endif %}
+
+
+	 {% endblock content %}

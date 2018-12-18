@@ -1,0 +1,49 @@
+{% extends 'si664finalproject/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+  <h2>{{hospital.city.city | safe}}</h2>
+
+
+  {% if hospital.zip_code.zip_code %}
+	<div class="row">
+	  <div class="col-sm-2">
+		<p>Zip Code</p>
+	  </div>
+	  <div class="col-sm-10">
+		{{hospital.zip_code.zip_code}}
+	  </div>
+	</div>
+  {% endif %}
+
+
+  {% if hospital.county.county %}
+	<div class="row">
+	  <div class="col-sm-2">
+		<p>County</p>
+	  </div>
+	  <div class="col-sm-10">
+		{{hospital.county.county}}
+	  </div>
+	</div>
+  {% endif %}
+
+  {% if hospital.state.state %}
+	<div class="row">
+	  <div class="col-sm-2">
+		<p>State</p>
+	  </div>
+	  <div class="col-sm-10">
+		{{hospital.state.state}}
+	  </div>
+	</div>
+  {% endif %}
+
+
+
+{% else %}
+  <a href="{% url 'login' %}">Log in</a>
+{% endif %}
+
+{% endblock content %}}

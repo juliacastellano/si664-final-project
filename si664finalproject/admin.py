@@ -4,16 +4,16 @@ import si664finalproject.models as models
 
 @admin.register(models.City)
 class CityAdmin(admin.ModelAdmin):
-	fields = ['state', 'city']
-	list_display = ['state', 'city']
+	fields = ['city']
+	list_display = ['city']
 	ordering = ['city']
 
 
 
 @admin.register(models.County)
 class CountyAdmin(admin.ModelAdmin):
-	fields = ['state', 'county']
-	list_display = ['state', 'county']
+	fields = ['county']
+	list_display = ['county']
 	ordering = ['county']
 
 
@@ -21,10 +21,6 @@ class CountyAdmin(admin.ModelAdmin):
 @admin.register(models.Hospital)
 class HospitalAdmin(admin.ModelAdmin):
 	fields = [
-		'state',
-		'county',
-		'city',
-		'zip_code',
 		'provider_identifier',
 		'hospital_name',
 		'address',
@@ -32,10 +28,6 @@ class HospitalAdmin(admin.ModelAdmin):
 	]
 
 	list_display = (
-		'state',
-		'county',
-		'city',
-		'zip_code',
 		'provider_identifier',
 		'hospital_name',
 		'address',
@@ -43,10 +35,6 @@ class HospitalAdmin(admin.ModelAdmin):
 	)
 
 	list_filter = (
-		'state',
-		'county',
-		'city',
-		'zip_code',
 		'provider_identifier',
 		'hospital_name',
 		'address',
@@ -58,9 +46,6 @@ class HospitalAdmin(admin.ModelAdmin):
 @admin.register(models.HospitalPayment)
 class HospitalPaymentAdmin(admin.ModelAdmin):
 	fields = [
-		'hospital',
-		'payment_measure',
-		'payment_category',
 		'denominator',
 		'payment_actual',
 		'payment_estimate_lower',
@@ -71,9 +56,6 @@ class HospitalPaymentAdmin(admin.ModelAdmin):
 	]
 
 	list_display = [
-		'hospital',
-		'payment_measure',
-		'payment_category',
 		'denominator',
 		'payment_actual',
 		'payment_estimate_lower',
@@ -84,9 +66,6 @@ class HospitalPaymentAdmin(admin.ModelAdmin):
 	]
 
 	list_filter = [
-		'hospital',
-		'payment_measure',
-		'payment_category',
 		'denominator',
 		'payment_actual',
 		'payment_estimate_lower',
@@ -101,25 +80,16 @@ class HospitalPaymentAdmin(admin.ModelAdmin):
 @admin.register(models.HospitalValue)
 class HospitalValueAdmin(admin.ModelAdmin):
 	fields = [
-		'hospital',
-		'value',
-		'value_category',
 		'value_footnote',
 		'start_date',
 		'end_date'
 	]
 	list_display = [
-		'hospital',
-		'value',
-		'value_category',
 		'value_footnote',
 		'start_date',
 		'end_date'
 	]
 	list_filter = [
-		'hospital',
-		'value',
-		'value_category',
 		'value_footnote',
 		'start_date',
 		'end_date'

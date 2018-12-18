@@ -1,0 +1,36 @@
+{% extends 'si664finalproject/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="px-2 py-2" style="border:1px solid #8E8D8A;">
+        <form action="" method="get">
+          {{ filter.form|crispy }}
+          <button type="submit" class="btn btn-outline-success">Filter</button>
+          &nbsp;<a class="btn btn-outline-secondary" href="{% url 'filters' %}">cancel</a>
+        </form>
+      </div>
+    </div>
+    <div class="col-sm-9">
+      {% for hospital in object_list %}
+        <h4>
+			<a href="{% url 'hospital_detail' hospital.pk %}"> {{hospital.hospital_name}} </a>
+		</h4>
+
+        {% if hospital.addresses %}
+          {{ hospital.addresses }}
+        {% endif %}
+
+        {% if hospital.phone_numbers %}
+          {{ hospital.phone_numbers | safe }}
+        {% endif %}
+
+    {% empty %}
+      Select one or more filters relevant to your search and then click "filter".
+    {% endfor %}
+    </div>
+  </div>
+{% endblock content %}
