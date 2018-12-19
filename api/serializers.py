@@ -47,9 +47,46 @@ class PaymentMeasureSerializer(serializers.ModelSerializer):
 
 class ValueSerializer(serializers.ModelSerializer):
 
+	value_of_care_identifier = serializers.CharField(
+		allow_null=False
+	)
+
+	value_of_care_name = serializers.CharField(
+		allow_null=False
+	)
+
+
 	class Meta:
 		model = Value
-		fields = ('value_id', 'value_of_care_identifier', 'value_of_care_name')
+		fields = (
+			'value_id',
+			'value_of_care_identifier',
+			'value_of_care_name',
+		)
+
+	def create(self, validated_data):
+
+		value = Value.objects.create(**validated_data)
+
+		return value
+
+	def update(self, instance, validated_data):
+		value_id = instance.value_id
+
+		instance.value_of_care_identifier = validated_data.get(
+			'value_of_care_identifier',
+			instance.value_of_care_identifier
+		)
+
+		instance.value_of_care_name = validated_data.get(
+			'value_of_care_name',
+			instance.value_of_care_name
+		)
+
+		instance.save()
+
+		return instance
+
 
 class ValueCategorySerializer(serializers.ModelSerializer):
 
