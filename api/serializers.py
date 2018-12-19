@@ -144,19 +144,28 @@ class HospitalSerializer(serializers.ModelSerializer):
 		return instance
 
 class HospitalValueSerializer(serializers.ModelSerializer):
-	hospital = HospitalSerializer(
+	hospital_id = serializers.PrimaryKeyRelatedField(
+		allow_null=False,
 		many=False,
-		read_only=True
+		write_only=True,
+		queryset=Hospital.objects.all(),
+		source='hospital'
 	)
 
-	value = ValueSerializer(
+	value_id = serializers.PrimaryKeyRelatedField(
+		allow_null=False,
 		many=False,
-		read_only=True
+		write_only=True,
+		queryset=Value.objects.all(),
+		source='value'
 	)
 
-	value_category = ValueCategorySerializer(
+	value_category_id = serializers.PrimaryKeyRelatedField(
+		allow_null=False,
 		many=False,
-		read_only=True
+		write_only=True,
+		queryset=ValueCategory.objects.all(),
+		source='value_category'
 	)
 
 	value_footnote = serializers.CharField(
@@ -176,9 +185,9 @@ class HospitalValueSerializer(serializers.ModelSerializer):
 		model = HospitalValue
 		fields = (
 			'hospital_value_id',
-			'hospital',
-			'value',
-			'value_category',
+			'hospital_id',
+			'value_id',
+			'value_category_id',
 			'value_footnote',
 			'start_date',
 			'end_date',
@@ -186,38 +195,41 @@ class HospitalValueSerializer(serializers.ModelSerializer):
 
 	def create(self, validated_data):
 
-		countries = validated_data.pop('hospital_value')
-		site = HeritageSite.objects.create(**validated_data)
+		hospital_value = HospitalValue.objects.create(**validated_data)
 
-		if countries is not None:
-			for country in countries:
-				HeritageSiteJurisdiction.objects.create(
-					heritage_site_id=site.heritage_site_id,
-					country_area_id=country.country_area_id
-				)
-		return site
+		return hospital_value
 
 	def update(self, instance, validated_data):
-		# site_id = validated_data.pop('heritage_site_id')
 		hospital_value_id = instance.hospital_value_id
 
+		instance.hospital_id = validated_data.get(
+			'hospital_id',
+			instance.hospital_id
+		)
+
+		instance.value_id = validated_data.get(
+			'value_id',
+			instance.value_id
+		)
+
+		instance.value_category_id = validated_data.get(
+			'value_category_id',
+			instance.value_category_id
+		)
+
 		instance.value_footnote = validated_data.get(
-			'provider_identifier',
-			instance.provider_identifier
+			'value_footnote',
+			instance.value_footnote
 		)
 
 		instance.start_date = validated_data.get(
-			'hospital_name',
-			instance.hospital_name
+			'start_date',
+			instance.start_date
 		)
 
 		instance.end_date = validated_data.get(
-			'address',
-			instance.address
-		)
-		instance.phone_number = validated_data.get(
-			'phone_number',
-			instance.phone_number
+			'end_date',
+			instance.end_date
 		)
 
 		instance.save()

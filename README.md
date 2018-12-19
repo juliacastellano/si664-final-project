@@ -21,6 +21,6 @@ hospitals in the United States. The dataset includes data for a variety of commo
 ailments, such as heart attack and pneumonia.
 
 ## Data model
-![alt text](https://github.com/juliacastellano/si664-final-project/blob/master/static/img/si664-final-project-datamodel.png)
+![alt text](https://github.com/juliacastellano/si664-final-project/blob/master/static/img/si664-final-project-datamodel-UPDATED.png)
 
 ## Package Dependencies

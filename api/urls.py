@@ -2,7 +2,7 @@ from django.urls import include, path
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import SimpleRouter
 from rest_framework_swagger.views import get_swagger_view
-from api.views import HospitalViewSet
+from api.views import HospitalViewSet, HospitalValueViewSet
 
 API_TITLE = 'si664finalproject API'
 API_DESC = 'A web API for creating, modifying and deleting Hospitals.'
@@ -25,6 +25,8 @@ schema_view = get_schema_view(
 
 router = SimpleRouter()
 router.register(r'hospitals', HospitalViewSet, base_name='hospitals')
+router.register(r'hospital_value', HospitalValueViewSet, base_name='hospital_value')
+
 # urlpatterns = router.urls
 
 # The API URLs are now determined automatically by the router.

@@ -32,10 +32,9 @@ class si664finalprojectFilter(django_filters.FilterSet):
 		lookup_expr='exact'
 	)
 
-	zip_code = django_filters.ModelChoiceFilter(
-		field_name='zip_code',
+	zip_code = django_filters.NumberFilter(
+		field_name='zip_code__zip_code',
 		label='Zip Code',
-		queryset=ZipCode.objects.all().order_by('zip_code'),
 		lookup_expr='exact'
 	)
 

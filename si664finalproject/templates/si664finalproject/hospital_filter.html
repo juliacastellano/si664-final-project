@@ -30,12 +30,16 @@
 			<a href="{% url 'hospital_detail' hospital.pk %}"> {{hospital.hospital_name}} </a>
 		</h4>
 
-        {% if hospital.addresses %}
-          {{ hospital.addresses }}
+        {% if hospital.address %}
+          {{ hospital.address }}
         {% endif %}
 
-        {% if hospital.phone_numbers %}
-          {{ hospital.phone_numbers | safe }}
+        {% if hospital.city %}
+          {{ hospital.city | safe}}
+        {% endif %}
+
+        {% if hospital.state %}
+          {{ hospital.state | safe}}
         {% endif %}
 
     {% empty %}
