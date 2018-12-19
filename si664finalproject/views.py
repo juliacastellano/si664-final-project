@@ -86,8 +86,7 @@ class HospitalCreateView(generic.View):
 		if form.is_valid():
 			site = form.save(commit=False)
 			site.save()
-			for hospital in form.cleaned_data['city']:
-				Hospital.objects.create(hospital=hospital, city=city)
+			#Hospital.objects.create(hospital_name=hospital_name)
 			return redirect(site) # shortcut to object's get_absolute_url()
 			# return HttpResponseRedirect(site.get_absolute_url())
 		return render(request, 'si664finalproject/hospital_new.html', {'form': form})
@@ -114,37 +113,6 @@ class HospitalUpdateView(generic.UpdateView):
 		# site.updated_by = self.request.user
 		# site.date_updated = timezone.now()
 		hospital.save()
-
-		old_ids = Hospital.objects\
-			.values_list('hospital_id', flat=True)\
-			.filter(hospital_id=hospital.hospital_id)
-
-		# New countries list
-		new_hospitals = form.cleaned_data['hospital_name']
-
-		# TODO can these loops be refactored?
-
-		# New ids
-		new_ids = []
-
-		# Insert new unmatched country entries
-		for hospital in new_hospitals:
-			new_id = hospital.hospital_id
-			new_ids.append(new_id)
-			if new_id in old_ids:
-				continue
-			else:
-				Hospital.objects \
-					.create(hospital = hospital, city=city)
-
-		# Delete old unmatched country entries
-		for old_id in old_ids:
-			if old_id in new_ids:
-				continue
-			else:
-				Hospital.objects \
-					.filter(hospital_id=hospital.hospital_id) \
-					.delete()
 
 		return HttpResponseRedirect(hospital.get_absolute_url())
 

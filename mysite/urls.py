@@ -15,8 +15,8 @@ urlpatterns = [
 	path('logout/', LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL},
 		 name='logout'),
 	path('si664finalproject/', include('si664finalproject.urls')),
-	#path('si664finalproject/api/rest-auth/', include('rest_auth.urls')),
-#	path('api-auth/', include('rest_framework.urls')),
-	#path('si664finalproject/api/', include('api.urls')),
-#	path('si664finalproject/api/rest-auth/registration/', include('rest_auth.registration.urls'))
+	path('si664finalproject/api/rest-auth/', include('rest_auth.urls')),
+	path('api-auth/', include('rest_framework.urls')),
+	path('si664finalproject/api/', include('api.urls')),
+	path('si664finalproject/api/rest-auth/registration/', include('rest_auth.registration.urls'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

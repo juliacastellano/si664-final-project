@@ -7,7 +7,7 @@ from si664finalproject.models import Hospital
 class si664finalprojectForm(forms.ModelForm):
 	class Meta:
 		model = Hospital
-		fields = '__all__'
+		fields = ['provider_identifier','hospital_name', 'address', 'phone_number']
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)

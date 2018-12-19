@@ -1,17 +1,17 @@
 from django.shortcuts import render
 
-from heritagesites.models import HeritageSite, HeritageSiteJurisdiction
-from api.serializers import HeritageSiteSerializer
+from si664finalproject.models import Hospital
+from api.serializers import HospitalSerializer
 from rest_framework import generics, permissions, status, viewsets
 from rest_framework.response import Response
 
 
-class SiteViewSet(viewsets.ModelViewSet):
+class HospitalViewSet(viewsets.ModelViewSet):
 	"""
 	This ViewSet provides both 'list' and 'detail' views.
 	"""
-	queryset = HeritageSite.objects.select_related('heritage_site_category').order_by('site_name')
-	serializer_class = HeritageSiteSerializer
+	queryset = Hospital.objects.order_by('hospital_name')
+	serializer_class = HospitalSerializer
 	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 	def delete(self, request, pk, format=None):

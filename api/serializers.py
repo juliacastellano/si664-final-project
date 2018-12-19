@@ -1,170 +1,192 @@
-from heritagesites.models import CountryArea, DevStatus, HeritageSite, HeritageSiteCategory, \
-	HeritageSiteJurisdiction, Location, Planet, Region, SubRegion, IntermediateRegion
+from si664finalproject.models import City, County, Hospital, \
+	HospitalPayment, HospitalValue, PaymentCategory, PaymentMeasure, State, \
+	Value, ValueCategory, ZipCode
 from rest_framework import response, serializers, status
 
-
-class PlanetSerializer(serializers.ModelSerializer):
-
-	class Meta:
-		model = Planet
-		fields = ('planet_id', 'planet_name', 'unsd_name')
-
-
-class RegionSerializer(serializers.ModelSerializer):
+class StateSerializer(serializers.ModelSerializer):
 
 	class Meta:
-		model = Region
-		fields = ('region_id', 'region_name', 'planet_id')
+		model = State
+		fields = ('state_id', 'state')
 
-
-class SubRegionSerializer(serializers.ModelSerializer):
-
-	class Meta:
-		model = SubRegion
-		fields = ('sub_region_id', 'sub_region_name', 'region_id')
-
-
-class IntermediateRegionSerializer(serializers.ModelSerializer):
+class ZipCodeSerializer(serializers.ModelSerializer):
 
 	class Meta:
-		model = IntermediateRegion
-		fields = ('intermediate_region_id', 'intermediate_region_name', 'sub_region_id')
+		model = ZipCode
+		fields = ('zip_code_id', 'zip_code')
 
-
-class LocationSerializer(serializers.ModelSerializer):
-	planet = PlanetSerializer(many=False, read_only=True)
-	region = RegionSerializer(many=False, read_only=True)
-	sub_region = SubRegionSerializer(many=False, read_only=True)
-	intermediate_region = IntermediateRegionSerializer(many=False, read_only=True)
+class CitySerializer(serializers.ModelSerializer):
+	state = StateSerializer(many=False, read_only=True)
 
 	class Meta:
-		model = Location
-		fields = ('location_id', 'planet', 'region', 'sub_region', 'intermediate_region')
+		model = City
+		fields = ('city_id', 'state', 'city')
 
 
-class DevStatusSerializer(serializers.ModelSerializer):
-
-	class Meta:
-		model = DevStatus
-		fields = ('dev_status_id', 'dev_status_name')
-
-
-class CountryAreaSerializer(serializers.ModelSerializer):
-	dev_status = DevStatusSerializer(many=False, read_only=True)
-	location = LocationSerializer(many=False, read_only=True)
+class CountySerializer(serializers.ModelSerializer):
+	state = StateSerializer(many=False, read_only=True)
 
 	class Meta:
-		model = CountryArea
-		fields = (
-			'country_area_id',
-			'country_area_name',
-			'm49_code',
-			'iso_alpha3_code',
-			'dev_status',
-			'location')
+		model = County
+		fields = ('county_id', 'state', 'county')
 
 
-class HeritageSiteCategorySerializer(serializers.ModelSerializer):
+class PaymentCategorySerializer(serializers.ModelSerializer):
 
 	class Meta:
-		model = HeritageSiteCategory
-		fields = ('category_id', 'category_name')
+		model = PaymentCategory
+		fields = ('payment_category_id', 'payment_category_name')
 
 
-class HeritageSiteJurisdictionSerializer(serializers.ModelSerializer):
-	heritage_site_id = serializers.ReadOnlyField(source='heritage_site.heritage_site_id')
-	country_area_id = serializers.ReadOnlyField(source='country_area.country_area_id')
+class PaymentMeasureSerializer(serializers.ModelSerializer):
 
 	class Meta:
-		model = HeritageSiteJurisdiction
-		fields = ('heritage_site_id', 'country_area_id')
+		model = PaymentMeasure
+		fields = ('payment_measure_id', 'payment_measure_identifier', 'payment_measure_name')
 
 
-class HeritageSiteSerializer(serializers.ModelSerializer):
-	site_name = serializers.CharField(
-		allow_blank=False,
-		max_length=255
+class ValueSerializer(serializers.ModelSerializer):
+
+	class Meta:
+		model = Value
+		fields = ('value_id', 'value_of_care_identifier', 'value_of_care_name')
+
+class ValueCategorySerializer(serializers.ModelSerializer):
+
+	class Meta:
+		model = ValueCategory
+		fields = ('value_category_id', 'value_category_name')
+
+
+class HospitalSerializer(serializers.ModelSerializer):
+	state = StateSerializer(
+		many=False,
+		read_only=True
 	)
-	description = serializers.CharField(
-		allow_blank=False
+
+	county = CountySerializer(
+		many=False,
+		read_only=True
 	)
-	justification = serializers.CharField(
-		allow_blank=True
+
+	city = CitySerializer(
+		many=False,
+		read_only=True
 	)
-	date_inscribed = serializers.IntegerField(
+
+	zip_code = ZipCodeSerializer(
+		many=False,
+		read_only=True
+	)
+
+	provider_identifier = serializers.IntegerField(
 		allow_null=True
 	)
-	longitude = serializers.DecimalField(
-		allow_null=True,
-		max_digits=11,
-		decimal_places=8)
-	latitude = serializers.DecimalField(
-		allow_null=True,
-		max_digits=10,
-		decimal_places=8
-	)
-	area_hectares = serializers.FloatField(
-		allow_null=True
-	)
-	transboundary = serializers.IntegerField(
+
+	hospital_name = serializers.CharField(
 		allow_null=False
 	)
-	heritage_site_category = HeritageSiteCategorySerializer(
-		many=False,
-		read_only=True
-	)
-	heritage_site_category_id = serializers.PrimaryKeyRelatedField(
-		allow_null=False,
-		many=False,
-		write_only=True,
-		queryset=HeritageSiteCategory.objects.all(),
-		source='heritage_site_category'
-	)
-	heritage_site_jurisdiction = HeritageSiteJurisdictionSerializer(
-		source='heritage_site_jurisdiction_set', # Note use of _set
-		many=True,
-		read_only=True
-	)
-	jurisdiction_ids = serializers.PrimaryKeyRelatedField(
-		many=True,
-		write_only=True,
-		queryset=CountryArea.objects.all(),
-		source='heritage_site_jurisdiction'
+
+	address = serializers.CharField(
+		allow_null=True
 	)
 
+	phone_number = serializers.IntegerField(
+		allow_null=True
+	)
+
+
 	class Meta:
-		model = HeritageSite
+		model = Hospital
 		fields = (
-			'heritage_site_id',
-			'site_name',
-			'description',
-			'justification',
-			'date_inscribed',
-			'longitude',
-			'latitude',
-			'area_hectares',
-			'transboundary',
-			'heritage_site_category',
-			'heritage_site_category_id',
-			'heritage_site_jurisdiction',
-			'jurisdiction_ids'
+			'hospital_id',
+			'state',
+			'county',
+			'city',
+			'zip_code',
+			'provider_identifier',
+			'hospital_name',
+			'address',
+			'phone_number',
 		)
 
 	def create(self, validated_data):
-		"""
-		This method persists a new HeritageSite instance as well as adds all related
-		countries/areas to the heritage_site_jurisdiction table.  It does so by first
-		removing (validated_data.pop('heritage_site_jurisdiction')) from the validated
-		data before the new HeritageSite instance is saved to the database. It then loops
-		over the heritage_site_jurisdiction array in order to extract each country_area_id
-		element and add entries to junction/associative heritage_site_jurisdiction table.
-		:param validated_data:
-		:return: site
-		"""
 
-		# print(validated_data)
+		hospital = Hospital.objects.create(**validated_data)
 
-		countries = validated_data.pop('heritage_site_jurisdiction')
+		return hospital
+
+	def update(self, instance, validated_data):
+		# site_id = validated_data.pop('heritage_site_id')
+		hospital_id = instance.hospital_id
+
+		instance.provider_identifier = validated_data.get(
+			'provider_identifier',
+			instance.provider_identifier
+		)
+
+		instance.hospital_name = validated_data.get(
+			'hospital_name',
+			instance.hospital_name
+		)
+
+		instance.address = validated_data.get(
+			'address',
+			instance.address
+		)
+		instance.phone_number = validated_data.get(
+			'phone_number',
+			instance.phone_number
+		)
+
+		instance.save()
+
+		return instance
+
+class HospitalValueSerializer(serializers.ModelSerializer):
+	hospital = HospitalSerializer(
+		many=False,
+		read_only=True
+	)
+
+	value = ValueSerializer(
+		many=False,
+		read_only=True
+	)
+
+	value_category = ValueCategorySerializer(
+		many=False,
+		read_only=True
+	)
+
+	value_footnote = serializers.CharField(
+		allow_null=False
+	)
+
+	start_date = serializers.DateField(
+		allow_null=False
+	)
+
+	end_date = serializers.DateField(
+		allow_null=False
+	)
+
+
+	class Meta:
+		model = HospitalValue
+		fields = (
+			'hospital_value_id',
+			'hospital',
+			'value',
+			'value_category',
+			'value_footnote',
+			'start_date',
+			'end_date',
+		)
+
+	def create(self, validated_data):
+
+		countries = validated_data.pop('hospital_value')
 		site = HeritageSite.objects.create(**validated_data)
 
 		if countries is not None:
@@ -177,72 +199,27 @@ class HeritageSiteSerializer(serializers.ModelSerializer):
 
 	def update(self, instance, validated_data):
 		# site_id = validated_data.pop('heritage_site_id')
-		site_id = instance.heritage_site_id
-		new_countries = validated_data.pop('heritage_site_jurisdiction')
+		hospital_value_id = instance.hospital_value_id
 
-		instance.site_name = validated_data.get(
-			'site_name',
-			instance.site_name
+		instance.value_footnote = validated_data.get(
+			'provider_identifier',
+			instance.provider_identifier
 		)
-		instance.description = validated_data.get(
-			'description',
-			instance.description
+
+		instance.start_date = validated_data.get(
+			'hospital_name',
+			instance.hospital_name
 		)
-		instance.justification = validated_data.get(
-			'justification',
-			instance.justification
+
+		instance.end_date = validated_data.get(
+			'address',
+			instance.address
 		)
-		instance.date_inscribed = validated_data.get(
-			'date_inscribed',
-			instance.date_inscribed
+		instance.phone_number = validated_data.get(
+			'phone_number',
+			instance.phone_number
 		)
-		instance.longitude = validated_data.get(
-			'longitude',
-			instance.longitude
-		)
-		instance.latitude = validated_data.get(
-			'latitude',
-			instance.latitude
-		)
-		instance.area_hectares = validated_data.get(
-			'area_hectares',
-			instance.area_hectares
-		)
-		instance.heritage_site_category_id = validated_data.get(
-			'heritage_site_category_id',
-			instance.heritage_site_category_id
-		)
-		instance.transboundary = validated_data.get(
-			'transboundary',
-			instance.transboundary
-		)
+
 		instance.save()
-
-		# If any existing country/areas are not in updated list, delete them
-		new_ids = []
-		old_ids = HeritageSiteJurisdiction.objects \
-			.values_list('country_area_id', flat=True) \
-			.filter(heritage_site_id__exact=site_id)
-
-		# TODO Insert may not be required (Just return instance)
-
-		# Insert new unmatched country entries
-		for country in new_countries:
-			new_id = country.country_area_id
-			new_ids.append(new_id)
-			if new_id in old_ids:
-				continue
-			else:
-				HeritageSiteJurisdiction.objects \
-					.create(heritage_site_id=site_id, country_area_id=new_id)
-
-		# Delete old unmatched country entries
-		for old_id in old_ids:
-			if old_id in new_ids:
-				continue
-			else:
-				HeritageSiteJurisdiction.objects \
-					.filter(heritage_site_id=site_id, country_area_id=old_id) \
-					.delete()
 
 		return instance

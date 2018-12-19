@@ -39,20 +39,6 @@ class si664finalprojectFilter(django_filters.FilterSet):
 		lookup_expr='exact'
 	)
 
-	payment_category_name = django_filters.ModelChoiceFilter(
-		field_name='payment_category_name',
-		label='Payment Category',
-		queryset=PaymentCategory.objects.all().order_by('payment_category_name'),
-		lookup_expr='exact'
-	)
-
-	value_category_name = django_filters.ModelChoiceFilter(
-		field_name='value_category_name',
-		label='Value Category',
-		queryset=ValueCategory.objects.all().order_by('value_category_name'),
-		lookup_expr='exact'
-	)
-
 
 	class Meta:
 		model = Hospital
